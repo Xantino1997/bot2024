@@ -6,7 +6,7 @@ const fs = require("fs");
 require('dotenv').config();
 // Cargar credenciales de Google
 
-const Ocredentials = process.env.CREDENTIALS
+// const Ocredentials = process.env.CREDENTIALS
 
 const { MessageMedia } = require("whatsapp-web.js");
 const path = require("path");
