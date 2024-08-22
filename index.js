@@ -787,14 +787,14 @@ app.get("/api/bot-status", (req, res) => {
 });
 
 
-app.use(express.static(path.join(__dirname, "../public"))); // Servir archivos estáticos desde la carpeta public
+app.use(express.static(path.join(__dirname, "./public"))); // Servir archivos estáticos desde la carpeta public
 
 // Ahora continúa con la generación del código QR
 client.on("qr", (qr) => {
   console.log("Evento QR recibido");
 
   // Define la ruta para guardar el archivo en la carpeta 'public'
-  const filePath = path.join(__dirname, "../public", "qr-code.txt");
+  const filePath = path.join(__dirname, "./public", "qr-code.txt");
   console.log("Ruta del archivo QR:", filePath);
 
   // Guarda el texto del QR en un archivo de texto
