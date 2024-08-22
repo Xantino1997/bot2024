@@ -6,7 +6,6 @@
   "scripts": {
     "start": "electron .",
     "server": "nodemon index.js",
-    "dev": "concurrently \"SET BROWSER=none && npm run server\" \"wait-on http://localhost:3000 && npm run start\"",
     "dist": "electron-builder"
   },
   "author": "",
