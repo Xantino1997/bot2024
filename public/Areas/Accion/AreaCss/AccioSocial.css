@@ -1,0 +1,214 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background-color: #e3f2fd;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  margin: 0;
+  color: #1b5e20;
+}
+
+.header .week-info {
+  font-size: 20px;
+  color: #004d40;
+}
+
+.header .day-info {
+  font-size: 20px;
+  color: #004d40;
+}
+
+a.inicio-link {
+  text-decoration: none; 
+  color: #ffffff; 
+  background-color: #4caf50; 
+  padding: 20px 30px; 
+  margin: 15px;
+  border-radius: 5px; 
+  font-family: Arial, sans-serif; 
+  font-size: 16px; 
+  display: inline-block; 
+}
+
+a.inicio-link:hover {
+  background-color: #98caf3; 
+}
+
+.header .day-buttons {
+  margin-top: 10px;
+}
+
+.header button {
+  padding: 12px;
+  font-size: 18px;
+  border: 2px solid #1b5e20;
+  border-radius: 4px;
+  background-color:#105e11;
+  color: white;
+  cursor: pointer;
+  margin: 0 5px;
+}
+.small-image{
+  width: 100px;
+  position: relative;
+  float: right;
+}
+.header button.active {
+  background-color:
+}
+
+.day-buttons button {
+  background-color:  #1b5e20;;
+  color: white;
+  border: 1px solid black;
+  font-weight: bold;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.day-buttons .active {
+  background-color: red;
+  color: white;
+}
+
+.day-section {
+  margin: 20px 0;
+  padding: 15px;
+  border-radius: 4px;
+  border: 1px solid #388e3c;
+}
+
+.day-section h2 {
+  margin: 0;
+  padding: 12px;
+  background-color: #2e7d32;
+  color: white;
+  border-radius: 4px;
+}
+
+.day-section .turnos-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.day-section th,
+.day-section td {
+  border: 1px solid #388e3c;
+  padding: 10px;
+  text-align: center;
+  font-size: 16px;
+}
+
+.day-section th {
+  background-color: #1b5e20;
+  color: white;
+}
+
+.day-section:nth-child(even) {
+  background-color: #a5d6a7;
+}
+
+.day-section:nth-child(odd) {
+  background-color: #c8e6c9;
+}
+
+.error {
+  color: #d32f2f;
+  font-weight: bold;
+}
+
+.time {
+  font-size: 24px;
+  font-weight: bold;
+  color: #004d40;
+}
+
+
+
+.day-section h2 {
+  padding: 10px;
+  color: white;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.day-section.lunes h2 {
+  background-color: #1e90ff; /* Celeste */
+}
+
+.day-section.martes h2 {
+  background-color: #87ceeb; /* Azul Claro */
+}
+
+.day-section.miércoles h2 {
+  background-color: #ff6347; /* Rojo */
+}
+
+.day-section.jueves h2 {
+  background-color: #d2691e; /* Marrón Dulce de Leche */
+}
+
+.day-section.viernes h2 {
+  background-color: #9400d3; /* Violeta */
+}
+
+.day-section.green h2 {
+  background-color: #32cd32; /* Verde estándar */
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #2196f3;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Seleccion Turnos</title>
+    <link rel="stylesheet" href="./turnos.css" />
+  </head>
+  <body>
+    <h1>Bienvenido, buen día</h1>
+    <div class="date" id="dateDisplay"></div>
+    <div class="date" id="dayDisplay"></div>
+
+    <fieldset>
+      <legend>Turno</legend>
+      <ul class="options">
+        <li><a href="../Areas/Accion/AccioSocial.html">Acción Social</a></li>
+        <li><a href="../Areas/Accion/Transito.html">Tránsito</a></li>
+        <li><a href="../Areas/Accion/Castracion.html">Castración</a></li>
+        <!-- <li><a href="../Areas/Accion/TestHtml/testDay.html">testDay</a></li> -->
+        <li><a href="../index.html">Inicio</a></li>
+      </ul>
+    </fieldset>
+
+    <div class="clock-container">
+      <div class="clock" id="clockDisplay">--:--</div>
+    </div>
+
+    <script>
+      function updateClock() {
+        const now = new Date();
+        const hours = now.getHours().toString().padStart(2, "0");
+        const minutes = now.getMinutes().toString().padStart(2, "0");
+        document.getElementById(
+          "clockDisplay"
+        ).textContent = `${hours}:${minutes}`;
+      }
+
+      function updateDate() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = now.getMonth();
+        const startOfWeek = new Date(
+          year,
+          month,
+          now.getDate() - now.getDay() + 1
+        );
+        const endOfWeek = new Date(
+          year,
+          month,
+          now.getDate() - now.getDay() + 7
+        );
+        const formattedStart = startOfWeek.toLocaleDateString("es-ES", {
+          day: "2-digit",
+          month: "2-digit",
+        });
+        const formattedEnd = endOfWeek.toLocaleDateString("es-ES", {
+          day: "2-digit",
+          month: "2-digit",
+        });
+        const weekRange = `Semana del ${formattedStart} al ${formattedEnd} de ${year}`;
+        document.getElementById("dateDisplay").textContent = weekRange;
+
+        const dayNames = [
+          "Domingo",
+          "Lunes",
+          "Martes",
+          "Miércoles",
+          "Jueves",
+          "Viernes",
+          "Sábado",
+        ];
+        const currentDay = dayNames[now.getDay()];
+        const currentDate = now.toLocaleDateString("es-ES", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        });
+        document.getElementById("dayDisplay").textContent = `${currentDay}, ${currentDate}`;
+      }
+
+      setInterval(updateClock, 1000);
+      updateClock();
+      updateDate();
+    </script>
+  </body>
+</html>

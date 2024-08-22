@@ -1,0 +1,88 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f2f2f2;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+.header {
+  background-color: #007BFF;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+.small-image{
+  width: 100px;
+  position: relative;
+  float: right;
+}
+
+.turnos-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px auto;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.turnos-table th,
+.turnos-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: center;
+  color: #555;
+}
+
+.turnos-table th {
+  background-color: #4CAF50;
+  color: white;
+  font-weight: bold;
+}
+
+.turnos-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.turnos-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.castrando-button {
+  background-color: #FF5733;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.castrando-button:hover {
+  background-color: #C4451C;
+}
+
+.castrado-button {
+  background-color: #28A745;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: not-allowed;
+}
+.inicio-button {
+  background-color: #28A745;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.error {
+  color: red;
+  text-align: center;
+  font-weight: bold;
+  margin-top: 20px;
+}

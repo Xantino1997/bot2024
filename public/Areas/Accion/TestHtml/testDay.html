@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Accion Social</title>
+    <link rel="stylesheet" href="../AreaCss/AccioSocial.css" />
+  </head>
+  <body>
+    <div class="header">
+      <img class="small-image" src="../../../Images/Co25.png" alt="Imagen"/>
+      <h1>Test</h1>
+      <div class="week-info">
+        <span id="week-info"></span>
+      </div>
+      <div class="day-info">
+        Hoy es <span id="current-day"></span> -
+        <span class="time" id="current-time"></span>
+      </div>
+      <div class="day-buttons">
+        <a href="../../../Turnos/turnos.html" class="inicio-link">Inicio</a><br />
+        <button data-day="Semana" class="active">Semana</button>
+        <button data-day="Lunes">Lunes</button>
+        <button data-day="Martes">Martes</button>
+        <button data-day="Miércoles">Miércoles</button>
+        <button data-day="Jueves">Jueves</button>
+        <button data-day="Viernes">Viernes</button>
+      </div>
+      <div class="action-buttons">
+        <button id="clean-all-turnos">Limpiar Todos los Turnos</button>
+        <button id="clean-selected-turno">Limpiar Turno Seleccionado</button>
+      </div>
+    </div>
+
+    <div id="days-container">
+      <!-- Se agregarán secciones de días aquí mediante JavaScript -->
+    </div>
+
+    <script>
+      function updateHeader() {
+        const now = new Date();
+        const dayNames = [
+          "Domingo",
+          "Lunes",
+          "Martes",
+          "Miércoles",
+          "Jueves",
+          "Viernes",
+          "Sábado",
+        ];
+
+        const startOfWeek = new Date();
+        startOfWeek.setDate(now.getDate() - now.getDay() + 1);
+        const endOfWeek = new Date();
+        endOfWeek.setDate(now.getDate() - now.getDay() + 5);
+
+        const options = { day: "numeric", month: "long", year: "numeric" };
+        const weekStartDate = startOfWeek.toLocaleDateString("es-ES", options);
+        const weekEndDate = endOfWeek.toLocaleDateString("es-ES", options);
+        document.getElementById(
+          "week-info"
+        ).textContent = `Semana del ${weekStartDate} al ${weekEndDate}`;
+
+        const date = now.getDate();
+        const month = now.toLocaleString("es-ES", { month: "long" });
+        const day = now.getDay();
+        const dayName = dayNames[day];
+        document.getElementById(
+          "current-day"
+        ).textContent = `${dayName} ${date} de ${month}`;
+
+        function updateTime() {
+          const now = new Date();
+          const hours = now.getHours().toString().padStart(2, "0");
+          const minutes = now.getMinutes().toString().padStart(2, "0");
+          document.getElementById(
+            "current-time"
+          ).textContent = `${hours}:${minutes}`;
+        }
+        updateTime();
+        setInterval(updateTime, 1000);
+      }
+
+      function fetchTurnos(day) {
+        const url =
+          day && day !== "Semana"
+            ? `/api/get-turnos-accion`
+            : "/api/get-turnos-accion";
+        fetch(url)
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("Datos recibidos:", data);
+
+            const daysContainer = document.getElementById("days-container");
+            daysContainer.innerHTML = "";
+
+            const validDays = [
+              "Lunes",
+              "Martes",
+              "Miércoles",
+              "Jueves",
+              "Viernes",
+            ];
+
+            validDays.forEach((dia) => {
+              if (day && day !== "Semana" && dia !== day) return; // Mostrar solo la tabla del día activo
+              console.log(`Datos para ${dia}:`, data[dia]);
+              const section = document.createElement("div");
+              section.classList.add("day-section");
+
+              const header = document.createElement("h2");
+              header.textContent = dia;
+              section.appendChild(header);
+
+              const table = document.createElement("table");
+              table.classList.add("turnos-table");
+
+              const thead = document.createElement("thead");
+              thead.innerHTML = `
+                <tr>
+                  <th>Turno</th>
+                  <th>Hora</th>
+                  <th>Fecha</th>
+                  <th>Nombre</th>
+                  <th>Disponibilidad</th>
+                  <th>Atendido</th> <!-- Nueva columna -->
+                </tr>
+              `;
+              table.appendChild(thead);
+
+              const tbody = document.createElement("tbody");
+              const turnos = data[dia] || [];
+              if (turnos.length === 0) {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                  <td colspan="6">No hay datos para este día</td> <!-- Colspan ajustado -->
+                `;
+                tbody.appendChild(row);
+              } else {
+                turnos.forEach((turno) => {
+                  const row = document.createElement("tr");
+
+                  let atendido =
+                    turno.disponible === "No disponible"
+                      ? "Atendido"
+                      : "No Atendido";
+                  let atendidoColor = atendido === "No Atendido" ? "red" : "green";
+
+                  row.innerHTML = `
+                    <td><strong>${turno.turno || ""}</strong></td>
+                    <td><strong>${turno.horario || ""}</strong></td>
+                    <td><strong>${turno.fecha || ""}</strong></td>
+                    <td><strong>${turno.nombre || "No asignado"}</strong></td>
+                    <td><strong>${turno.disponible || "No disponible"}</strong></td>
+                    <td>
+                      <button class="atendido-btn" style="color: ${atendidoColor};"><strong>${atendido}</strong></button>
+                    </td>
+                  `;
+
+                  row
+                    .querySelector(".atendido-btn")
+                    .addEventListener("click", function () {
+                      if (this.textContent === "No Atendido") {
+                        this.textContent = "Atendido";
+                        this.style.color = "green";
+                      } else {
+                        this.textContent = "No Atendido";
+                        this.style.color = "red";
+                      }
+                    });
+
+                  tbody.appendChild(row);
+                });
+              }
+              table.appendChild(tbody);
+              section.appendChild(table);
+              daysContainer.appendChild(section);
+            });
+          });
+      }
+
+      function addEventListeners() {
+        document.querySelectorAll(".day-buttons button").forEach((button) => {
+          button.addEventListener("click", () => {
+            document.querySelectorAll(".day-buttons button").forEach((btn) => {
+              btn.classList.remove("active");
+            });
+            button.classList.add("active");
+            const day = button.dataset.day;
+            fetchTurnos(day);
+          });
+        });
+
+        document
+          .getElementById("clean-all-turnos")
+          .addEventListener("click", () => {
+            fetch("/api/clean-all-turnos", { method: "POST" })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.success) {
+                  alert("Todos los turnos han sido limpiados.");
+                  fetchTurnos("Semana"); // Actualiza la vista después de limpiar
+                } else {
+                  alert("Error al limpiar todos los turnos.");
+                }
+              });
+          });
+
+        document
+          .getElementById("clean-selected-turno")
+          .addEventListener("click", () => {
+            const turnoSeleccionado = prompt("Ingrese el número de turno para limpiar:");
+            if (turnoSeleccionado) {
+              fetch("/api/clean-turno", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ turno: turnoSeleccionado }),
+              })
+                .then((response) => response.json())
+                .then((data) => {
+                  if (data.success) {
+                    alert(`Turno ${turnoSeleccionado} ha sido limpiado.`);
+                    fetchTurnos("Semana"); // Actualiza la vista después de limpiar
+                  } else {
+                    alert("Error al limpiar el turno.");
+                  }
+                });
+            }
+          });
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        updateHeader();
+        fetchTurnos("Semana");
+        addEventListeners();
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Turnos Castración</title>
+    <link rel="stylesheet" href="./AreaCss/Castracion.css" />
+  </head>
+  <body>
+    <div class="header">
+      <img class="small-image" src="../../Images/Co25.png" alt="Imagen"/>
+      <h1>Turnos Castración</h1>
+      <div class="day-buttons">
+        <a href="../../Turnos/turnos.html" class="inicio-button">Inicio</a><br>
+    
+      </div>
+    </div>
+
+    <div id="turnos-container">
+      <!-- Aquí se colocará la tabla con los turnos -->
+    </div>
+
+    <script>
+      function fetchTurnos() {
+        fetch("/api/get-turnos-castracion")
+          .then((response) => response.json())
+          .then((data) => {
+            const turnosContainer = document.getElementById("turnos-container");
+            turnosContainer.innerHTML = ""; // Limpiar el contenedor
+
+            const table = document.createElement("table");
+            table.classList.add("turnos-table");
+
+            const thead = document.createElement("thead");
+            thead.innerHTML = `
+              <tr>
+                <th>Turno</th>
+                <th>Hem/Macho</th>
+                <th>Hora</th>
+                <th>Nombre</th>
+                <th>Disponible</th>
+                <th>Teléfono Dueño</th>
+                <th>Estado</th>
+              </tr>
+            `;
+            table.appendChild(thead);
+
+            const tbody = document.createElement("tbody");
+
+            data.forEach((turno, index) => {
+              const row = document.createElement("tr");
+              row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${turno.hemMacho || ""}</td>
+                <td>${turno.horario || ""}</td>
+                <td>${turno.nombre || "No asignado"}</td>
+                <td>${turno.disponible || "No disponible"}</td>
+                <td>${turno.dueño || "Sin registros"}</td>
+                <td>
+                  <button class="castrando-button" onclick="markAsCastrado(this)">
+                    Castrando
+                  </button>
+                </td>
+              `;
+              tbody.appendChild(row);
+            });
+
+            table.appendChild(tbody);
+            turnosContainer.appendChild(table);
+          })
+          .catch((error) => {
+            console.error("Error al cargar los turnos:", error);
+            document.body.innerHTML +=
+              '<p class="error">Error al cargar los turnos.</p>';
+          });
+      }
+
+      function markAsCastrado(button) {
+        button.textContent = "Castrado";
+        button.classList.remove("castrando-button");
+        button.classList.add("castrado-button");
+      }
+
+      // Inicializar los turnos al cargar la página
+      fetchTurnos();
+    </script>
+  </body>
+</html>

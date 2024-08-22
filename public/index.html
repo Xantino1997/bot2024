@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QR Code Generator</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1 id="statusMessage" style="display: none">Regenerando código...</h1>
+      <!-- Mensaje de estado -->
+
+      <h1>QR Code Generator</h1>
+
+      <!-- Formulario de autenticación -->
+      <div id="authForm">
+        <input type="text" id="username" placeholder="User" required />
+        <input type="password" id="password" placeholder="Password" required />
+        <button id="loginBtn">Login</button>
+      </div>
+
+      <!-- Contenedor de QR y botones de opciones -->
+      <div class="DivOptionBtn" id="qrSection" style="display: none">
+        <div class="DivQR">
+          <div id="qrcode"></div>
+          <div>
+          <button id="downloadBtn">Download as PNG</button>
+          <button id="regenerateQrBtn">Regenerar QR</button>
+        </div>
+          <!-- Nuevo botón -->
+        </div>
+
+        <div class="DivOptionBtn">
+          <a href="./Turnos/turnos.html" class="OptionBtn">Ir a turnos</a>
+          <button class="OptionBtn" onclick="cerrarSesion()">
+            Cerrar sesión
+          </button>
+          <button class="OptionBtn" onclick="bloquearAcceso()">Bloquear</button>
+          <button class="OptionBtn" onclick="cambiarPassword()">
+            Cambiar Password
+          </button>
+        </div>
+      </div>
+
+      <!-- Formulario de cambio de contraseña -->
+      <div id="changePasswordForm" style="display: none">
+        <input
+          type="password"
+          id="currentPassword"
+          placeholder="Current Password"
+          required
+        />
+        <input
+          type="password"
+          id="newPassword"
+          placeholder="New Password"
+          required
+        />
+        <button id="changePasswordBtn">Change Password</button>
+      </div>
+    </div>
+
+    <script>
+      let currentUsername = "user";
+      let currentPassword = "123456789";
+
+      // Mostrar QR y opciones después de la autenticación
+      document
+        .getElementById("loginBtn")
+        .addEventListener("click", function () {
+          const username = document.getElementById("username").value;
+          const password = document.getElementById("password").value;
+
+          if (username === currentUsername && password === currentPassword) {
+            document.getElementById("authForm").style.display = "none";
+            document.getElementById("qrSection").style.display = "block";
+            generateQRCode();
+          } else {
+            alert("User or Password incorrect");
+          }
+        });
+
+      // Generar QR Code
+      function generateQRCode() {
+        const statusMessage = document.getElementById("statusMessage");
+        statusMessage.style.display = "block"; // Mostrar mensaje de regeneración
+        statusMessage.textContent = "Regenerando código..."; // Mostrar el mensaje
+
+        fetch("/qr-code.txt")
+          .then((response) => response.text())
+          .then((text) => {
+            const qrCodeContainer = document.getElementById("qrcode");
+            qrCodeContainer.innerHTML = ""; // Limpiar el QR anterior
+            const qrCode = new QRCode(qrCodeContainer, {
+              text: text,
+              width: 256,
+              height: 256,
+            });
+
+            statusMessage.style.display = "none"; // Ocultar mensaje cuando se genere el QR
+
+            // Descargar el QR como PNG
+            const downloadBtn = document.getElementById("downloadBtn");
+            downloadBtn.addEventListener("click", () => {
+              const qrCanvas = document.querySelector("#qrcode canvas");
+              const pngUrl = qrCanvas.toDataURL("image/png");
+
+              const downloadLink = document.createElement("a");
+              downloadLink.href = pngUrl;
+              downloadLink.download = "qr-code.png";
+              downloadLink.click();
+            });
+          })
+          .catch((error) => {
+            console.error("Error fetching the QR code text:", error);
+            statusMessage.textContent = "Error al regenerar el código";
+          });
+      }
+
+      // Regenerar el código QR
+      document
+        .getElementById("regenerateQrBtn")
+        .addEventListener("click", function () {
+          generateQRCode();
+        });
+
+      // Cerrar sesión y volver a la pantalla de autenticación
+      function cerrarSesion() {
+        document.getElementById("authForm").style.display = "block";
+        document.getElementById("qrSection").style.display = "none";
+      }
+
+      // Bloquear el acceso, volver a mostrar el formulario de autenticación
+      function bloquearAcceso() {
+        cerrarSesion();
+      }
+
+      // Mostrar formulario de cambio de contraseña
+      function cambiarPassword() {
+        document.getElementById("qrSection").style.display = "none";
+        document.getElementById("changePasswordForm").style.display = "block";
+      }
+
+      // Cambiar la contraseña
+      document
+        .getElementById("changePasswordBtn")
+        .addEventListener("click", function () {
+          const currentPasswordInput =
+            document.getElementById("currentPassword").value;
+          const newPassword = document.getElementById("newPassword").value;
+
+          if (currentPasswordInput === currentPassword) {
+            currentPassword = newPassword;
+            alert("Password changed successfully");
+            document.getElementById("changePasswordForm").style.display =
+              "none";
+            document.getElementById("qrSection").style.display = "block";
+          } else {
+            alert("Current Password incorrect");
+          }
+        });
+    </script>
+  </body>
+</html>
