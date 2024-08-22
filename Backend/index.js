@@ -19,6 +19,16 @@ const credentialsPath = path.join(__dirname, 'credentials.json');
 // Leer y parsear el archivo de credenciales
 const CREDENTIALS = JSON.parse(fs.readFileSync(credentialsPath, 'utf8'));
 
+const authPath = path.join(__dirname, '.wwebjs_auth');
+
+const client = new Client({
+    authStrategy: new LocalAuth({
+        clientId: "client-one", // Cambia el clientId si es necesario
+        dataPath: authPath // Especifica la ruta de almacenamiento
+    })
+})
+
+
 
 const inactivityTimeout = 5 * 60 * 1000; // 5 minutos en milisegundos
 const lastActivity = {};
